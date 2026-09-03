@@ -1,0 +1,40 @@
+
+services:
+  apache:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    container_name: apache-grupo-studio
+    ports:
+      - "8093:80"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - mysql
+    networks:
+      - app-network-grupo-studio
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    container_name: mysql-grupo-studio
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3311:3306"
+    networks:
+      - app-network-grupo-studio
+
+volumes:
+  mysql_data:
+
+networks:
+  app-network-grupo-studio:
+    driver: bridge
