@@ -1,4 +1,4 @@
-<?
+<?php
 
 // app/Repositories/BaseRepository.php
 namespace App\Repositories;
@@ -32,9 +32,9 @@ abstract class BaseRepository implements BaseInterface
 
     public function update(int $id, array $data)
     {
-        $record = $this->findOne($id);
-        $record->update($data);
-        return $record;
+        $updateData = $this->findOne($id);
+        $updateData->update($data);
+        return $updateData;
     }
 
     public function destroy(int $id): bool
