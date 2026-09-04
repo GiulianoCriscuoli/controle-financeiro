@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 use App\Services\Auth\UserService;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
@@ -16,13 +17,33 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
-    public function login(UserRequest $request)
+    public function login(UserRequest $request) : JsonResponse
     {
+
+    $data  = $request->validated();
+
+    $user  = $this->userService->login($data);
+    $token = $this->userService->generateToken($user);
+
+        return response()->json([
+            'message' => 'Login bem-sucedido',
+            'user' => $user,
+        ], 200)->cookie(
+            'auth_token',
+            $token,
+            60 * 24 * 7,
+            '/',
+            null,
+            false,
+            true,
+            false,
+            'Lax'
+        );
 
     }
 
-    public function logout(Request $request)
-    {
+    // public function logout(Request $request) : JsonResponse
+    // {
 
-    }
+    // }
 }

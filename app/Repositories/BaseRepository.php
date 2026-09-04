@@ -25,7 +25,7 @@ abstract class BaseRepository implements BaseInterface
         return $this->model->select($columns)->findOrFail($id);
     }
 
-    public function create(array $data)
+    public function store(array $data)
     {
         return $this->model->create($data);
     }

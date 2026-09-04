@@ -17,6 +17,7 @@ services:
 
   mysql:
     image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
     restart: unless-stopped
     container_name: mysql-grupo-studio
     env_file:
@@ -25,6 +26,7 @@ services:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
