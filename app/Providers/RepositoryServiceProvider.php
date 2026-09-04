@@ -2,16 +2,16 @@
 
 namespace App\Providers;
 
-use App\Interfaces\Auth\UserInterface;
+use Illuminate\Support\ServiceProvider;
 use App\Interfaces\Auth\UserRepositoryInterface;
 use App\Repositories\Auth\UserRepository;
+use App\Interfaces\Auth\UserInterface;
 use App\Services\Auth\UserService;
-use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class RepositoryServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Register services.
      */
     public function register(): void
     {
@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap services.
      */
     public function boot(): void
     {

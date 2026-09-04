@@ -12,13 +12,13 @@ class UserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     public function rules(): array
     {
         return [
-            'email' => ['required','email', 'unique:users,email'],
+            'email' => ['required','email'],
             'password' => ['required','string',Password::min(8)->mixedCase()->symbols()->numbers()],
         ];
     }
@@ -28,7 +28,6 @@ class UserRequest extends FormRequest
         return [
             'email.required' => 'O campo de e-mail é obrigatório.',
             'email.email' => 'O campo de e-mail deve ser um endereço de e-mail válido.',
-            'email.unique' => 'O e-mail informado já está em uso.',
             'password.required' => 'O campo de senha é obrigatório.',
             'password.min' => 'A senha deve ter no mínimo 8 caracteres.',
             'password.mixed' => 'A senha deve conter letra maiúscula e minúscula.',

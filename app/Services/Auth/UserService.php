@@ -6,6 +6,7 @@ use App\Interfaces\Auth\UserInterface;
 use App\Interfaces\Auth\UserRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Validation\ValidationException;
 
 class UserService implements UserInterface
 {
@@ -25,10 +26,10 @@ class UserService implements UserInterface
         return $user;
     }
 
-    // public function logout()
-    // {
-
-    // }
+   public function logout(Authenticatable $user): void
+    {
+        $user->currentAccessToken()->delete();
+    }
 
       public function generateToken(Authenticatable $user): string
     {

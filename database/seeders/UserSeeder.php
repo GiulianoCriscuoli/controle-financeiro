@@ -12,10 +12,9 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $senha = Str::random(12);
+        $senha = Str::upper(Str::random(1)) . Str::random(9) . rand(0, 9) . '!';
 
         $user = User::factory()->create([
-            'name' => 'Usuário Teste',
             'email' => 'teste@exemplo.com',
             'password' => Hash::make($senha),
         ]);

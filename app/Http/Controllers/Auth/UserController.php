@@ -28,6 +28,7 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Login bem-sucedido',
             'user' => $user,
+            'token' => $token
         ], 200)->cookie(
             'auth_token',
             $token,
@@ -42,8 +43,11 @@ class UserController extends Controller
 
     }
 
-    // public function logout(Request $request) : JsonResponse
-    // {
+    public function logout(Request $request): JsonResponse
+    {
+        $this->userService->logout($request->user());
 
-    // }
+        return response()->json(['message' => 'Logout realizado com sucesso.'])
+            ->cookie('auth_token', null, -1, '/', null, false, true, false, 'Lax');
+    }
 }
