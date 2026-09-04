@@ -6,7 +6,7 @@ use App\Interfaces\BaseInterface;
 
 interface TypeAccountRepositoryInterface extends BaseInterface
 {
-
-    // public function relationTypeAccountUser() : object;
+    public function relationTypeAccountUser(int $typeAccountId) : object;
+    public function allRelationTypeAccountUser(): object;
 
 }

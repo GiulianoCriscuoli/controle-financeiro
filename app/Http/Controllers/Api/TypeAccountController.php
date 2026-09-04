@@ -19,8 +19,9 @@ class TypeAccountController extends Controller
     }
     public function index()
     {
-        // $typeAccounts = $this->typeAccountService->listTypeAccounts();
-        // return response()->json($typeAccounts);
+         $typeAccount = $this->typeAccountService->all();
+
+        return response()->json($typeAccount, 200);
     }
 
     public function store(TypeAccountRequest $request)
@@ -48,7 +49,8 @@ class TypeAccountController extends Controller
 
     public function show(TypeAccount $typeAccount)
     {
-        //
+        $typeAccount = $this->typeAccountService->show($typeAccount->id);
+        return response()->json($typeAccount, 200);
     }
 
     public function update(TypeAccountRequest $request, TypeAccount $typeAccount)
@@ -74,6 +76,21 @@ class TypeAccountController extends Controller
 
     public function destroy(TypeAccount $typeAccount)
     {
-        //
+
+        $id = $typeAccount->id;
+
+        try {
+            $this->typeAccountService->destroy($id);
+
+            return response()->json([
+                'message' => 'O Tipo de conta foi excluído com sucesso',
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Erro ao excluir tipo de conta: ' . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Não foi possível concluir a exclusão. Tente novamente.',
+            ], 500);
+        }
     }
 }
