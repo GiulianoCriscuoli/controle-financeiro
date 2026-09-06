@@ -22,7 +22,9 @@ class FinancialTransactionController extends Controller
 
     public function index()
     {
-        //
+        $financialTransaction = $this->financialtransactionService->all();
+
+        return response()->json($financialTransaction, 200);
     }
 
     public function store(FinancialTransactionRequest $request)
@@ -42,11 +44,6 @@ class FinancialTransactionController extends Controller
                 'message' => 'Não foi possível concluir o cadastro. Tente novamente.',
             ], 500);
         }
-    }
-
-    public function show(FinancialTransaction $financialTransaction)
-    {
-        //
     }
 
     public function update(FinancialTransactionRequest $request, FinancialTransaction $financialTransaction)

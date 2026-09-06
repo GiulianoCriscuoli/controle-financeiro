@@ -13,6 +13,4 @@ interface FinancialTransactionInterface
     public function update(int $financialTransactionId, array $data): FinancialTransaction;
 
     public function destroy(int $financialTransactionId): void;
-
-    public function show(int $financialTransactionId): FinancialTransaction;
 }

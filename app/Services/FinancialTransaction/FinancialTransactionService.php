@@ -14,7 +14,9 @@ class FinancialTransactionService implements FinancialTransactionInterface
 
     public function all(): object
     {
-        //
+        $allfinancialTransaction = $this->financialTransactionRepository->allRelationFinancialTransactionTypeAccount();
+
+        return $allfinancialTransaction;
     }
 
     public function store(array $data): object

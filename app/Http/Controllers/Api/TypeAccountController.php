@@ -19,7 +19,7 @@ class TypeAccountController extends Controller
     }
     public function index()
     {
-         $typeAccount = $this->typeAccountService->all();
+        $typeAccount = $this->typeAccountService->all();
 
         return response()->json($typeAccount, 200);
     }
