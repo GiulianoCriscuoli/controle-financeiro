@@ -25,11 +25,6 @@ class FinancialTransactionController extends Controller
         //
     }
 
-    public function create()
-    {
-        //
-    }
-
     public function store(FinancialTransactionRequest $request)
     {
         $data = $request->validated();
@@ -54,18 +49,43 @@ class FinancialTransactionController extends Controller
         //
     }
 
-    public function edit(FinancialTransaction $financialTransaction)
+    public function update(FinancialTransactionRequest $request, FinancialTransaction $financialTransaction)
     {
-        //
-    }
 
-    public function update(Request $request, FinancialTransaction $financialTransaction)
-    {
-        //
+        $data = $request->validated();
+        $id = $financialTransaction->id;
+
+        try {
+            $financialTransaction = $this->financialtransactionService->update($id, $data);
+
+            return response()->json([
+                'message' => 'O lançamento foi atualizado com sucesso',
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Erro ao atualizar lançamento: ' . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Não foi possível concluir a atualização. Tente novamente.',
+            ], 500);
+        }
     }
 
     public function destroy(FinancialTransaction $financialTransaction)
     {
-        //
+        $id = $financialTransaction->id;
+
+        try {
+            $this->financialtransactionService->destroy($id);
+
+            return response()->json([
+                'message' => 'O lançamento foi excluído com sucesso',
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Erro ao excluir lançamento: ' . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Não foi possível concluir a exclusão. Tente novamente.',
+            ], 500);
+        }
     }
 }

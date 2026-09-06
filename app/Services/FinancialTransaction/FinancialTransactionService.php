@@ -24,9 +24,8 @@ class FinancialTransactionService implements FinancialTransactionInterface
 
     public function update(int $financialTransactionId, array $data): FinancialTransaction
     {
-
         if(!$financialTransactionId) {
-            throw new \InvalidArgumentException('Conta a pagar ou a recer não foi encontrada para atualização.');
+            throw new \InvalidArgumentException('O lançamento não foi encontrado para atualização.');
         }
 
         return $this->financialTransactionRepository->update($financialTransactionId, $data);
@@ -34,11 +33,10 @@ class FinancialTransactionService implements FinancialTransactionInterface
 
     public function destroy(int $financialTransactionId): void
     {
-        //
-    }
+        if (!$financialTransactionId) {
+            throw new \InvalidArgumentException('O lançamento não foi encontrado para exclusão.');
+        }
 
-    public function show(int $financialTransactionId): FinancialTransaction
-    {
-        //
+        $this->financialTransactionRepository->destroy($financialTransactionId);
     }
 }

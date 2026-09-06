@@ -11,5 +11,5 @@ Route::post('/login', [UserController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [UserController::class, 'logout']);
     Route::resource('type-accounts', TypeAccountController::class)->except(['create', 'edit']);
-    Route::resource('financial-transactions', FinancialTransactionController::class)->except(['create', 'edit']);
+    Route::resource('financial-transactions', FinancialTransactionController::class)->except(['create', 'edit', 'show']);
 });
