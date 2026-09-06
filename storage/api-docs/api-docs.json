@@ -1,0 +1,844 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Sistema de Controle Financeiro API",
+        "description": "Documentação dos endpoints da API (autenticação, tipos de conta e transações financeiras).",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8093/api",
+            "description": "Servidor da API"
+        }
+    ],
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Autentica o usuário e retorna um token",
+                "operationId": "ef2497651f5b870ac573479c3605e366",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "teste@exemplo.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Teste@123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login bem-sucedido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login bem-sucedido"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "11|xxxxxxxxxxxxxxxxxxxx"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Credenciais inválidas ou dados de validação incorretos"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Revoga o token atual do usuário autenticado",
+                "operationId": "2344782f4f6c3ff16eecb5f5a5cf5458",
+                "responses": {
+                    "200": {
+                        "description": "Logout realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout realizado com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/financial-transactions": {
+            "get": {
+                "tags": [
+                    "Transações Financeiras"
+                ],
+                "summary": "Lista todas as transações financeiras",
+                "operationId": "4dce1dc4f614dfd6dcb8866dc02712bd",
+                "responses": {
+                    "200": {
+                        "description": "Lista de transações financeiras",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/FinancialTransaction"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Transações Financeiras"
+                ],
+                "summary": "Cria um lançamento (conta a pagar ou a receber)",
+                "operationId": "158c03eb0b15b384bab3243079b7519c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FinancialTransactionInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Lançamento criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "O lançamento foi criado com sucesso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    },
+                    "422": {
+                        "description": "Dados de validação incorretos"
+                    },
+                    "500": {
+                        "description": "Erro ao processar o cadastro"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/financial-transactions/{financial_transaction}": {
+            "get": {
+                "tags": [
+                    "Transações Financeiras"
+                ],
+                "summary": "Exibe uma transação financeira específica",
+                "operationId": "1e0bdaefdfd2ba93cc5698f15ee0844a",
+                "parameters": [
+                    {
+                        "name": "financial_transaction",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transação encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FinancialTransaction"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Transações Financeiras"
+                ],
+                "summary": "Atualiza uma transação financeira (parcial ou total)",
+                "operationId": "ea6ae28df86847f05e9ba9b66bd2e104",
+                "parameters": [
+                    {
+                        "name": "financial_transaction",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FinancialTransactionInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Transação atualizada com sucesso"
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    },
+                    "422": {
+                        "description": "Dados de validação incorretos"
+                    },
+                    "500": {
+                        "description": "Erro ao processar a atualização"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Transações Financeiras"
+                ],
+                "summary": "Exclui uma transação financeira",
+                "operationId": "defe54a69087186e40b70bb4fc89baec",
+                "parameters": [
+                    {
+                        "name": "financial_transaction",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transação excluída com sucesso"
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    },
+                    "500": {
+                        "description": "Erro ao processar a exclusão"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/type-accounts": {
+            "get": {
+                "tags": [
+                    "Tipos de Conta"
+                ],
+                "summary": "Lista todos os tipos de conta com o usuário vinculado",
+                "operationId": "5c003c43bfd609fff28a29cac0d32f56",
+                "responses": {
+                    "200": {
+                        "description": "Lista de tipos de conta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TypeAccount"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Tipos de Conta"
+                ],
+                "summary": "Cadastra um tipo de conta (cliente ou fornecedor)",
+                "operationId": "5834f5ff85f6330de4fd11b8fb0234d1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TypeAccountInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cadastro criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "O Cadastro de cliente criado com sucesso"
+                                        },
+                                        "type_account": {
+                                            "$ref": "#/components/schemas/TypeAccount"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    },
+                    "422": {
+                        "description": "Dados de validação incorretos"
+                    },
+                    "500": {
+                        "description": "Erro ao processar o cadastro"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/type-accounts/{type_account}": {
+            "get": {
+                "tags": [
+                    "Tipos de Conta"
+                ],
+                "summary": "Exibe um tipo de conta específico com o usuário vinculado",
+                "operationId": "790188e652ca9f0150bc7971c59f5f15",
+                "parameters": [
+                    {
+                        "name": "type_account",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tipo de conta encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TypeAccount"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Tipos de Conta"
+                ],
+                "summary": "Atualiza um tipo de conta (parcial ou total)",
+                "operationId": "d4b67edf9c8682f4dd465b37b30398dd",
+                "parameters": [
+                    {
+                        "name": "type_account",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TypeAccountInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Tipo de conta atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "O Tipo de conta foi atualizado com sucesso"
+                                        },
+                                        "type_account": {
+                                            "$ref": "#/components/schemas/TypeAccount"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    },
+                    "422": {
+                        "description": "Dados de validação incorretos"
+                    },
+                    "500": {
+                        "description": "Erro ao processar a atualização"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Tipos de Conta"
+                ],
+                "summary": "Exclui um tipo de conta",
+                "operationId": "3d5536caf09d1136a87268de906f3120",
+                "parameters": [
+                    {
+                        "name": "type_account",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tipo de conta excluído com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "O Tipo de conta foi excluído com sucesso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    },
+                    "404": {
+                        "description": "Registro não encontrado"
+                    },
+                    "500": {
+                        "description": "Erro ao processar a exclusão"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "User": {
+                "title": "User",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "João da Silva"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "teste@exemplo.com"
+                    },
+                    "email_verified_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "TypeAccount": {
+                "title": "TypeAccount",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Grupo Studio"
+                    },
+                    "cpf_cnpj": {
+                        "type": "string",
+                        "example": "12345678000199"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "contato@grupostudio.com"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "11987654321"
+                    },
+                    "type": {
+                        "description": "C = cliente, F = fornecedor",
+                        "type": "string",
+                        "example": "C",
+                        "enum": [
+                            "C",
+                            "F"
+                        ]
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "user": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "TypeAccountInput": {
+                "title": "TypeAccountInput",
+                "required": [
+                    "name",
+                    "cpf_cnpj",
+                    "email",
+                    "phone",
+                    "type"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Grupo Studio",
+                        "maxLength": 255,
+                        "minLength": 3
+                    },
+                    "cpf_cnpj": {
+                        "description": "Somente dígitos (CPF) ou letras maiúsculas e dígitos (CNPJ), sem pontuação",
+                        "type": "string",
+                        "example": "12345678000199",
+                        "maxLength": 14,
+                        "minLength": 11
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "contato@grupostudio.com"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "11987654321",
+                        "maxLength": 11,
+                        "minLength": 10
+                    },
+                    "type": {
+                        "type": "string",
+                        "example": "C",
+                        "enum": [
+                            "C",
+                            "F"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "FinancialTransaction": {
+                "title": "FinancialTransaction",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "type_account_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "type": {
+                        "type": "string",
+                        "example": "receber",
+                        "enum": [
+                            "receber",
+                            "pagar"
+                        ]
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Venda de serviço de consultoria mensal"
+                    },
+                    "amount": {
+                        "type": "string",
+                        "example": "1500.00"
+                    },
+                    "issue_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2026-09-06"
+                    },
+                    "due_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2026-10-06"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "pendente"
+                    },
+                    "settlement_date": {
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "type_account": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/TypeAccount"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "FinancialTransactionInput": {
+                "title": "FinancialTransactionInput",
+                "required": [
+                    "type_account_id",
+                    "type",
+                    "description",
+                    "amount",
+                    "issue_date",
+                    "due_date",
+                    "status"
+                ],
+                "properties": {
+                    "type_account_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "type": {
+                        "type": "string",
+                        "example": "receber",
+                        "enum": [
+                            "receber",
+                            "pagar"
+                        ]
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Venda de serviço de consultoria mensal",
+                        "maxLength": 255,
+                        "minLength": 10
+                    },
+                    "amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1500
+                    },
+                    "issue_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2026-09-06"
+                    },
+                    "due_date": {
+                        "description": "Igual ou posterior a issue_date",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2026-10-06"
+                    },
+                    "status": {
+                        "description": "receber: pendente|recebido|vencido|cancelado — pagar: pendente|pago|vencido|cancelado",
+                        "type": "string",
+                        "example": "pendente"
+                    },
+                    "settlement_date": {
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "Sanctum",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Autenticação",
+            "description": "Login e logout de usuário"
+        },
+        {
+            "name": "Tipos de Conta",
+            "description": "CRUD de clientes e fornecedores"
+        },
+        {
+            "name": "Transações Financeiras",
+            "description": "CRUD de contas a pagar e a receber"
+        }
+    ]
+}
