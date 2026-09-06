@@ -62,7 +62,7 @@ class TypeAccountController extends Controller
             $typeAccount = $this->typeAccountService->update($id, $data);
 
             return response()->json([
-                'message' => 'O Tipo de conta atualizado com sucesso',
+                'message' => 'O Tipo de conta foi atualizado com sucesso',
                 'type_account' => $typeAccount
             ]);
         } catch (Throwable $e) {

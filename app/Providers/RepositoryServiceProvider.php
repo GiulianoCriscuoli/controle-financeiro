@@ -11,6 +11,10 @@ use App\Interfaces\TypeAccount\TypeAccountRepositoryInterface;
 use App\Repositories\TypeAccount\TypeAccountRepository;
 use App\Interfaces\TypeAccount\TypeAccountInterface;
 use App\Services\TypeAccount\TypeAccountService;
+use App\Interfaces\FinancialTransaction\FinancialTransactionRepositoryInterface;
+use App\Repositories\FinancialTransaction\FinancialTransactionRepository;
+use App\Interfaces\FinancialTransaction\FinancialTransactionInterface;
+use App\Services\FinancialTransaction\FinancialTransactionService;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -24,6 +28,9 @@ class RepositoryServiceProvider extends ServiceProvider
 
         $this->app->bind(TypeAccountRepositoryInterface::class, TypeAccountRepository::class);
         $this->app->bind(TypeAccountInterface::class, TypeAccountService::class);
+
+        $this->app->bind(FinancialTransactionRepositoryInterface::class, FinancialTransactionRepository::class);
+        $this->app->bind(FinancialTransactionInterface::class, FinancialTransactionService::class);
     }
 
     /**
