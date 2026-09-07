@@ -7,11 +7,6 @@ use Illuminate\Support\Collection;
 
 class DashboardService
 {
-    /**
-     * Busca todas as transações (com o type_account já carregado) e
-     * agrupa por type_account_id em memória, calculando os totais de
-     * cada grupo com filtros simples de Collection.
-     */
     public function index(): Collection
     {
         $now = now();
@@ -44,6 +39,30 @@ class DashboardService
                     'realized_balance' => $this->money($realizedBalance),
                 ];
             })
+            ->values();
+    }
+
+    public function report(array $filters): Collection
+    {
+        return FinancialTransaction::query()
+            ->selectRaw('YEAR(due_date) as year, type_account_id, type, status, SUM(amount) as total')
+            ->when($filters['start_date'] ?? null, fn ($query, $date) => $query->where('due_date', '>=', $date))
+            ->when($filters['end_date'] ?? null, fn ($query, $date) => $query->where('due_date', '<=', $date))
+            ->when($filters['type_account_id'] ?? null, fn ($query, $id) => $query->where('type_account_id', $id))
+            ->when($filters['type'] ?? null, fn ($query, $type) => $query->where('type', $type))
+            ->when($filters['status'] ?? null, fn ($query, $status) => $query->where('status', $status))
+            ->groupBy('year', 'type_account_id', 'type', 'status')
+            ->with('typeAccount:id,name')
+            ->orderBy('year')
+            ->get()
+            ->map(fn (FinancialTransaction $row) => [
+                'year' => (int) $row->year,
+                'type_account_id' => $row->type_account_id,
+                'name' => $row->typeAccount->name,
+                'type' => $row->type,
+                'status' => $row->status,
+                'total' => $this->money($row->total),
+            ])
             ->values();
     }
 

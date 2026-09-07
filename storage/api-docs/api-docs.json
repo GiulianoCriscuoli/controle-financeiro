@@ -110,6 +110,134 @@
                 ]
             }
         },
+        "/dashboard": {
+            "get": {
+                "tags": [
+                    "Dashboard"
+                ],
+                "summary": "Resumo financeiro consolidado por tipo de conta",
+                "operationId": "a55fe257c3e95fb5176b72242b547da8",
+                "responses": {
+                    "200": {
+                        "description": "Lista de resumos financeiros agrupados por tipo de conta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/DashboardAccountSummary"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/dashboard/report": {
+            "get": {
+                "tags": [
+                    "Dashboard"
+                ],
+                "summary": "Relatório financeiro consolidado por ano, tipo de conta, tipo e status",
+                "operationId": "5a6324c0d00f4bb1b48bd518d38ef658",
+                "parameters": [
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "Filtra vencimento a partir desta data",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "example": "2026-01-01"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "Filtra vencimento até esta data (igual ou posterior a start_date)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "example": "2026-12-31"
+                    },
+                    {
+                        "name": "type_account_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "receber",
+                                "pagar"
+                            ]
+                        },
+                        "example": "receber"
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "pendente",
+                                "recebido",
+                                "pago",
+                                "cancelado"
+                            ]
+                        },
+                        "example": "pendente"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Linhas do relatório consolidado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/DashboardReportRow"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    },
+                    "422": {
+                        "description": "Dados de validação incorretos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/financial-transactions": {
             "get": {
                 "tags": [
@@ -817,6 +945,103 @@
                     }
                 },
                 "type": "object"
+            },
+            "DashboardAccountSummary": {
+                "title": "DashboardAccountSummary",
+                "properties": {
+                    "type_account_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Grupo Studio"
+                    },
+                    "total_receivable": {
+                        "description": "Total a receber pendente",
+                        "type": "number",
+                        "format": "float",
+                        "example": 1500
+                    },
+                    "total_received": {
+                        "description": "Total já recebido",
+                        "type": "number",
+                        "format": "float",
+                        "example": 800
+                    },
+                    "total_overdue_receivable": {
+                        "description": "Total a receber vencido",
+                        "type": "number",
+                        "format": "float",
+                        "example": 300
+                    },
+                    "total_payable": {
+                        "description": "Total a pagar pendente",
+                        "type": "number",
+                        "format": "float",
+                        "example": 1200
+                    },
+                    "total_paid": {
+                        "description": "Total já pago",
+                        "type": "number",
+                        "format": "float",
+                        "example": 500
+                    },
+                    "total_overdue_payable": {
+                        "description": "Total a pagar vencido",
+                        "type": "number",
+                        "format": "float",
+                        "example": 250
+                    },
+                    "projected_balance": {
+                        "description": "(a receber + recebido) - (a pagar + pago)",
+                        "type": "number",
+                        "format": "float",
+                        "example": 600
+                    },
+                    "realized_balance": {
+                        "description": "recebido - pago",
+                        "type": "number",
+                        "format": "float",
+                        "example": 300
+                    }
+                },
+                "type": "object"
+            },
+            "DashboardReportRow": {
+                "title": "DashboardReportRow",
+                "properties": {
+                    "year": {
+                        "type": "integer",
+                        "example": 2026
+                    },
+                    "type_account_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Grupo Studio"
+                    },
+                    "type": {
+                        "type": "string",
+                        "example": "receber",
+                        "enum": [
+                            "receber",
+                            "pagar"
+                        ]
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "pendente"
+                    },
+                    "total": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1500
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
@@ -839,6 +1064,10 @@
         {
             "name": "Transações Financeiras",
             "description": "CRUD de contas a pagar e a receber"
+        },
+        {
+            "name": "Dashboard",
+            "description": "Resumo financeiro e relatório consolidado"
         }
     ]
 }

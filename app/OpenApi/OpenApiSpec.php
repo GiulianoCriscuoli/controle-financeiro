@@ -22,6 +22,7 @@ use OpenApi\Attributes as OA;
 #[OA\Tag(name: 'Autenticação', description: 'Login e logout de usuário')]
 #[OA\Tag(name: 'Tipos de Conta', description: 'CRUD de clientes e fornecedores')]
 #[OA\Tag(name: 'Transações Financeiras', description: 'CRUD de contas a pagar e a receber')]
+#[OA\Tag(name: 'Dashboard', description: 'Resumo financeiro e relatório consolidado')]
 final class OpenApiSpec
 {
 }

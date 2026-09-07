@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use  App\Services\DashboardService;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\FinancialReportRequest;
 
 class DashboardController extends Controller
 {
@@ -15,8 +15,13 @@ class DashboardController extends Controller
     {
         $this->dashboardService = $dashboardService;
     }
-        public function index(): JsonResponse
+    public function index(): JsonResponse
     {
         return response()->json($this->dashboardService->index());
+    }
+
+    public function report(FinancialReportRequest $request): JsonResponse
+    {
+        return response()->json($this->dashboardService->report($request->validated()));
     }
 }

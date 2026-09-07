@@ -14,4 +14,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('type-accounts', TypeAccountController::class)->except(['create', 'edit']);
     Route::resource('financial-transactions', FinancialTransactionController::class)->except(['create', 'edit', 'show']);
     Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/dashboard/report', [DashboardController::class, 'report']);
 });

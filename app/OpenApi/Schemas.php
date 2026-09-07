@@ -82,6 +82,34 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'settlement_date', type: 'string', format: 'date', nullable: true),
     ]
 )]
+#[OA\Schema(
+    schema: 'DashboardAccountSummary',
+    title: 'DashboardAccountSummary',
+    properties: [
+        new OA\Property(property: 'type_account_id', type: 'integer', example: 1),
+        new OA\Property(property: 'name', type: 'string', example: 'Grupo Studio'),
+        new OA\Property(property: 'total_receivable', type: 'number', format: 'float', description: 'Total a receber pendente', example: 1500.00),
+        new OA\Property(property: 'total_received', type: 'number', format: 'float', description: 'Total já recebido', example: 800.00),
+        new OA\Property(property: 'total_overdue_receivable', type: 'number', format: 'float', description: 'Total a receber vencido', example: 300.00),
+        new OA\Property(property: 'total_payable', type: 'number', format: 'float', description: 'Total a pagar pendente', example: 1200.00),
+        new OA\Property(property: 'total_paid', type: 'number', format: 'float', description: 'Total já pago', example: 500.00),
+        new OA\Property(property: 'total_overdue_payable', type: 'number', format: 'float', description: 'Total a pagar vencido', example: 250.00),
+        new OA\Property(property: 'projected_balance', type: 'number', format: 'float', description: '(a receber + recebido) - (a pagar + pago)', example: 600.00),
+        new OA\Property(property: 'realized_balance', type: 'number', format: 'float', description: 'recebido - pago', example: 300.00),
+    ]
+)]
+#[OA\Schema(
+    schema: 'DashboardReportRow',
+    title: 'DashboardReportRow',
+    properties: [
+        new OA\Property(property: 'year', type: 'integer', example: 2026),
+        new OA\Property(property: 'type_account_id', type: 'integer', example: 1),
+        new OA\Property(property: 'name', type: 'string', example: 'Grupo Studio'),
+        new OA\Property(property: 'type', type: 'string', enum: ['receber', 'pagar'], example: 'receber'),
+        new OA\Property(property: 'status', type: 'string', example: 'pendente'),
+        new OA\Property(property: 'total', type: 'number', format: 'float', example: 1500.00),
+    ]
+)]
 final class Schemas
 {
 }
