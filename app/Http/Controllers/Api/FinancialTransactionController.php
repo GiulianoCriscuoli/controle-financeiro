@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\FinancialTransaction;
 use App\Services\FinancialTransaction\FinancialTransactionService;
-use Illuminate\Http\Request;
 use App\Http\Requests\FinancialTransactionRequest;
 use Illuminate\Support\Facades\Log;
 use Throwable;

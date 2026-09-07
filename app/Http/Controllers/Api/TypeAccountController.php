@@ -11,7 +11,7 @@ use Throwable;
 
 class TypeAccountController extends Controller
 {
-       private $typeAccountService = null;
+    private $typeAccountService = null;
 
     public function __construct(TypeAccountService $typeAccountService)
     {
