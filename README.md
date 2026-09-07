@@ -103,6 +103,13 @@ Email: teste@exemplo.com
 Senha: Xxxxxxxxx0!
 ```
 
+OBS: OU SE PREFERIR, DEIXEI ESTE USUÁRIO PRONTO
+
+{
+	"email": "teste@exemplo.com",
+	"password": "Teste@123"
+}
+
 Guarde a senha exibida — use-a no endpoint `POST /api/login` para obter o token Bearer.
 
 > Recriar do zero: `docker compose exec apache php artisan migrate:fresh --seed`
@@ -118,7 +125,7 @@ Como `L5_SWAGGER_GENERATE_ALWAYS=true`, a documentação é regenerada a cada ac
 docker compose exec apache php artisan l5-swagger:generate
 ```
 
-## Autenticação
+## Autenticação TIPO SANCTUM
 
 1. `POST /api/login` com `email` e `password` -> retorna `token`.
 2. Enviar `Authorization: Bearer <token>` nas demais rotas (protegidas por `auth:sanctum`).
